@@ -102,44 +102,4 @@ with col2:
     if st.button("Predict High-Demand Medicine", type="primary"):
         # Encode inputs
         season_encoded = le_season.transform([input_season])[0]
-        disease_encoded = le_disease.transform([input_disease])[0]
-
-
-        st.markdown("---")
-st.header("💡 Advanced Mining: Association & Inventory Insights")
-
-col3, col4 = st.columns(2)
-
-with col3:
-    st.subheader("🔗 Frequently Bought Together")
-    st.write("Using association rule concepts, here are recommended cross-sells based on the primary medicine:")
-    
-    # Association Rule mapping (Market Basket Analysis)
-    cross_sell_data = pd.DataFrame({
-        'Primary Medicine': ['Antibiotics', 'Antipyretics (Fever)', 'Antihistamines (Allergies)', 'Analgesics (Pain Relief)', 'Electrolytes'],
-        'Recommended Cross-Sell': ['Probiotics', 'Thermometers & Vitamin C', 'Nasal Spray', 'Hot Water Bags', 'Zinc Supplements']
-    })
-    st.table(cross_sell_data)
-
-with col4:
-    st.subheader("⚠️ Live Stock Alerts")
-    st.write("Simulated inventory tracking based on current demand trends.")
-    
-    # Simulate current inventory levels
-    inventory_df = pd.DataFrame({
-        'Medicine Category': df['Top_Selling_Medicine'].unique(),
-        'Current Stock (%)': np.random.randint(15, 95, size=len(df['Top_Selling_Medicine'].unique()))
-    })
-    
-    # Function to highlight low stock in red
-    def highlight_low_stock(val):
-        color = '#ff4b4b' if val < 30 else '#00FF00'
-        return f'color: {color}; font-weight: bold'
-        
-    # Apply the styling and display
-    st.dataframe(inventory_df.style.map(highlight_low_stock, subset=['Current Stock (%)']), use_container_width=True)
-        # Make Prediction
-            prediction = model.predict([[season_encoded, input_temp, disease_encoded]])[0]
-        
-        st.success(f"**Predicted Top Seller:** {prediction}")
-        st.write("Ensure your pharmacy has enough stock of this category for the upcoming weeks!")
+        disease_encoded = le_disease.transform([input_disease])[0] 
