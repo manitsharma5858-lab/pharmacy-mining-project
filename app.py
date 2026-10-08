@@ -100,6 +100,20 @@ with col2:
     input_temp = st.slider("Average Temperature (°C)", min_value=-10, max_value=50, value=25)
     
     if st.button("Predict High-Demand Medicine", type="primary"):
-        # Encode inputs
+        # 1. Encode inputs into numbers
         season_encoded = le_season.transform([input_season])[0]
-        disease_encoded = le_disease.transform([input_disease])[0] 
+        disease_encoded = le_disease.transform([input_disease])[0]
+        
+        # 2. Package the input to match the training data exactly
+        input_data = pd.DataFrame({
+            'Season_Encoded': [season_encoded],
+            'Temperature_C': [input_temp],
+            'Disease_Encoded': [disease_encoded]
+        })
+        
+        # 3. Make Prediction
+        prediction = model.predict(input_data)[0]
+        
+        # 4. Display the results on screen
+        st.success(f"**Predicted Top Seller:** {prediction}")
+        st.write("Ensure your pharmacy has enough stock of this category for the upcoming weeks!")
