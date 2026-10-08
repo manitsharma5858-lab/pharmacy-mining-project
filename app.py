@@ -139,7 +139,7 @@ with col4:
     # Apply the styling and display
     st.dataframe(inventory_df.style.map(highlight_low_stock, subset=['Current Stock (%)']), use_container_width=True)
         # Make Prediction
-            prediction = model.predict([[season_encoded, input_temp, disease_encoded]])[0]
+        prediction = model.predict([[season_encoded, input_temp, disease_encoded]])[0]
         
         st.success(f"**Predicted Top Seller:** {prediction}")
         st.write("Ensure your pharmacy has enough stock of this category for the upcoming weeks!")
