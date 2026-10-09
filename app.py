@@ -211,3 +211,38 @@ st.markdown(
     """, 
     unsafe_allow_html=True
 )
+
+st.markdown("---")
+st.subheader("🔮 Automated Batch Prediction: 7-Day Forecast")
+st.write("Demonstrating how the data warehouse uses the trained model to run bulk predictions for upcoming inventory planning.")
+
+# 1. Generate hypothetical data for the next 7 days
+future_days = [f"Day {i+1}" for i in range(7)]
+future_seasons = np.random.choice(['Autumn', 'Winter'], 7) 
+future_temps = np.random.randint(15, 32, 7)
+future_diseases = np.random.choice(['Flu', 'Viral Fever', 'Common Cold', 'Allergies'], 7)
+
+# 2. Encode the future text data into numbers for the model
+future_s_enc = le_season.transform(future_seasons)
+future_d_enc = le_disease.transform(future_diseases)
+
+# 3. Structure it to match our Random Forest training format
+future_input = pd.DataFrame({
+    'Season_Encoded': future_s_enc,
+    'Temperature_C': future_temps,
+    'Disease_Encoded': future_d_enc
+})
+
+# 4. Make bulk predictions all at once
+future_preds = rf_model.predict(future_input)
+
+# 5. Display the results in a clean table
+forecast_df = pd.DataFrame({
+    'Upcoming Timeline': future_days,
+    'Expected Season': future_seasons,
+    'Forecast Temp (°C)': future_temps,
+    'Risk Factor': future_diseases,
+    'Stock Required (Predicted)': future_preds
+})
+
+st.dataframe(forecast_df, use_container_width=True)
