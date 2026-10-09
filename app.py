@@ -9,47 +9,31 @@ from sklearn.preprocessing import LabelEncoder
 # --- Page Configuration ---
 st.set_page_config(page_title="Pharmacy Data Mining", page_icon="💊", layout="wide")
 
-# --- 1. Generate 5000-Row Dataset (With Realistic Noise) ---
+# --- 1. Generate 5000-Row Dataset ---
 @st.cache_data
 def load_data():
     np.random.seed(42)
     n_rows = 5000
     
-    # Added Spring and Autumn
-    seasons = np.random.choice(['Summer', 'Winter', 'Monsoon', 'Spring', 'Autumn'], n_rows)
+    seasons = np.random.choice(['Summer', 'Winter', 'Monsoon'], n_rows)
     temperatures = []
     diseases = []
     medicines = []
     
-    all_meds = ['Antipyretics (Fever)', 'Analgesics (Pain Relief)', 'Antihistamines (Allergies)', 
-                'Electrolytes', 'Antibiotics', 'Cough Syrup', 'Vitamin C']
-    
     for s in seasons:
         if s == 'Winter':
             temp = np.random.randint(-5, 15)
-            d = np.random.choice(['Flu', 'Common Cold', 'Pneumonia'], p=[0.5, 0.4, 0.1])
-            m = np.random.choice(['Antipyretics (Fever)', 'Cough Syrup', 'Antibiotics'], p=[0.5, 0.4, 0.1])
+            d = np.random.choice(['Flu', 'Common Cold'], p=[0.6, 0.4])
+            m = 'Antipyretics (Fever)' if d == 'Flu' else 'Analgesics (Pain Relief)'
         elif s == 'Summer':
             temp = np.random.randint(25, 45)
-            d = np.random.choice(['Allergies', 'Dehydration', 'Heat Stroke'], p=[0.4, 0.5, 0.1])
-            m = np.random.choice(['Antihistamines (Allergies)', 'Electrolytes', 'Analgesics (Pain Relief)'], p=[0.4, 0.5, 0.1])
-        elif s == 'Monsoon':
+            d = np.random.choice(['Allergies', 'Dehydration'], p=[0.7, 0.3])
+            m = 'Antihistamines (Allergies)' if d == 'Allergies' else 'Electrolytes'
+        else: # Monsoon
             temp = np.random.randint(20, 35)
-            d = np.random.choice(['Malaria', 'Dengue', 'Viral Fever', 'Typhoid'], p=[0.2, 0.2, 0.5, 0.1])
-            m = np.random.choice(['Antibiotics', 'Antipyretics (Fever)', 'Analgesics (Pain Relief)'], p=[0.3, 0.5, 0.2])
-        elif s == 'Spring':
-            temp = np.random.randint(15, 25)
-            d = np.random.choice(['Allergies', 'Asthma', 'Common Cold'], p=[0.6, 0.2, 0.2])
-            m = np.random.choice(['Antihistamines (Allergies)', 'Cough Syrup', 'Vitamin C'], p=[0.6, 0.2, 0.2])
-        else: # Autumn
-            temp = np.random.randint(10, 20)
-            d = np.random.choice(['Flu', 'Viral Fever', 'Allergies'], p=[0.4, 0.4, 0.2])
-            m = np.random.choice(['Antipyretics (Fever)', 'Vitamin C', 'Antihistamines (Allergies)'], p=[0.5, 0.3, 0.2])
+            d = np.random.choice(['Malaria', 'Dengue', 'Viral Fever'], p=[0.3, 0.3, 0.4])
+            m = 'Antibiotics' if d in ['Malaria', 'Dengue'] else 'Antipyretics (Fever)'
             
-        # Introduce 15% random noise (simulating unpredictable real-world customers)
-        if np.random.rand() < 0.15:
-            m = np.random.choice(all_meds)
-
         temperatures.append(temp)
         diseases.append(d)
         medicines.append(m)
@@ -62,6 +46,7 @@ def load_data():
     })
     return df
 
+df = load_data()
 
 # --- 2. Data Preprocessing & Model Training ---
 # Encode categorical variables for the Machine Learning model
