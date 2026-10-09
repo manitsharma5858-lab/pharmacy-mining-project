@@ -191,31 +191,3 @@ st.bar_chart(comparison_df.set_index('Algorithm'))
 
 # 5. Show the exact percentage numbers in a clean table
 st.dataframe(comparison_df.style.format({'Accuracy (%)': '{:.2f}%'}), use_container_width=True)
-
-st.markdown("---")
-st.header("🧩 Unsupervised Learning: K-Means Clustering")
-st.write("Demonstrating the clustering rule process (Assignment 9) by grouping temperature and disease data without predefined labels.")
-
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
-import matplotlib.pyplot as plt
-
-# 1. Prepare data for clustering
-X_cluster = df[['Temperature_C', 'Disease_Encoded']]
-
-# 2. Apply K-Means Clustering (Aiming for 3 clusters representing typical environmental patterns)
-kmeans = KMeans(n_clusters=3, random_state=42, n_init="auto")
-df['Cluster'] = kmeans.fit_predict(X_cluster)
-
-# 3. Calculate Clustering Validation Score
-sil_score = silhouette_score(X_cluster, df['Cluster'])
-st.info(f"**Silhouette Score:** {sil_score:.2f} (Score ranges from -1 to 1; closer to 1 means distinct, well-separated clusters)")
-
-# 4. Visualize the Clusters
-st.subheader("Scatter Plot: Temperature vs. Disease Groupings")
-fig, ax = plt.subplots()
-scatter = ax.scatter(df['Temperature_C'], df['Disease_Encoded'], c=df['Cluster'], cmap='viridis', alpha=0.6)
-ax.set_xlabel("Temperature (°C)")
-ax.set_ylabel("Disease (Encoded)")
-ax.set_title("K-Means Groupings")
-st.pyplot(fig)
