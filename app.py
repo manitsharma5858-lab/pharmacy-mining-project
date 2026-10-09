@@ -117,3 +117,46 @@ with col2:
         # 4. Display the results on screen
         st.success(f"**Predicted Top Seller:** {prediction}")
         st.write("Ensure your pharmacy has enough stock of this category for the upcoming weeks!")
+
+st.markdown("---")
+st.header("📂 Data Warehouse & Analytics Dashboard")
+st.write("Deeper insights into the data mining model and current warehouse inventory.")
+
+# Create a new two-column layout for the bottom section
+col3, col4 = st.columns([1, 1])
+
+with col3:
+    st.subheader("🧠 Model Feature Importance")
+    st.write("Displays which factor (Season, Temp, or Disease) the algorithm relies on most to make its prediction.")
+    
+    # Extract feature importance from the trained Random Forest model
+    feature_importances = model.feature_importances_
+    feature_names = ['Season', 'Temperature', 'Prevailing Disease']
+    
+    importance_df = pd.DataFrame({
+        'Feature': feature_names,
+        'Importance Level': feature_importances
+    }).set_index('Feature')
+    
+    # Render a bar chart for the importances
+    st.bar_chart(importance_df)
+
+with col4:
+    st.subheader("📦 Warehouse Inventory Status")
+    st.write("Simulated live tracking of current medicine stock levels.")
+    
+    # Create a simple, error-proof mock inventory dataframe
+    inventory_data = pd.DataFrame({
+        'Medicine Category': df['Top_Selling_Medicine'].unique(),
+        'Current Stock (Units)': np.random.randint(100, 1500, size=len(df['Top_Selling_Medicine'].unique())),
+        'Status': np.random.choice(['Optimal', 'Low Stock', 'Reorder Soon'], size=len(df['Top_Selling_Medicine'].unique()), p=[0.5, 0.3, 0.2])
+    })
+    
+    # Display the dataframe cleanly
+    st.dataframe(inventory_data, use_container_width=True)
+
+st.markdown("---")
+st.subheader("📋 Recent Warehouse Queries (Audit Log)")
+st.write("A view into the latest historical records stored in the data warehouse.")
+# Display the last 5 rows of the dataset to simulate a running log
+st.dataframe(df.tail(5), use_container_width=True)
