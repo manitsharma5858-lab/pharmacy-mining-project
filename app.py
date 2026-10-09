@@ -179,30 +179,3 @@ scatter = ax.scatter(df['Temperature_C'], df['Disease_Encoded'], c=df['Cluster']
 ax.set_xlabel("Temperature (°C)")
 ax.set_ylabel("Disease (Encoded)")
 st.pyplot(fig)
-
-st.markdown("---")
-st.header("🏆 Master DWM Performance Summary")
-st.write("A unified chart comparing the evaluation metrics of all Data Warehousing and Mining (DWM) algorithms applied in this project.")
-
-# Combine all model scores into a single dataframe using a 0 to 1 scale
-master_performance_df = pd.DataFrame({
-    'DWM Algorithm': [
-        'Random Forest (Accuracy)', 
-        'J48 / Decision Tree (Accuracy)', 
-        'Naive Bayes (Accuracy)', 
-        'K-Means (Silhouette Score)'
-    ],
-    'Evaluation Score (0 to 1)': [rf_accuracy, dt_accuracy, nb_accuracy, sil_score]
-})
-
-# Render the unified chart
-st.bar_chart(master_performance_df.set_index('DWM Algorithm'))
-
-st.markdown("---")
-
-# Convert the Random Forest accuracy to a percentage
-final_accuracy = rf_accuracy * 100
-
-
-    unsafe_allow_html=True
-)
