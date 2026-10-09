@@ -197,3 +197,19 @@ master_performance_df = pd.DataFrame({
 
 # Render the unified chart
 st.bar_chart(master_performance_df.set_index('DWM Algorithm'))
+
+st.markdown("---")
+
+# Convert the Random Forest accuracy to a percentage
+final_accuracy = rf_accuracy * 100
+
+# Create a colorful, eye-catching banner using HTML and CSS
+st.markdown(
+    f"""
+    <div style="background-image: linear-gradient(to right, #ff9966, #ff5e62); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0px 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="color: white; font-family: sans-serif; margin-bottom: 0px;">✨ Final Model Accuracy (Random Forest) ✨</h2>
+        <h1 style="color: white; font-family: sans-serif; font-size: 60px; margin-top: 10px;">{final_accuracy:.2f}%</h1>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
