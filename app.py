@@ -160,3 +160,34 @@ st.subheader("📋 Recent Warehouse Queries (Audit Log)")
 st.write("A view into the latest historical records stored in the data warehouse.")
 # Display the last 5 rows of the dataset to simulate a running log
 st.dataframe(df.tail(5), use_container_width=True)
+
+st.markdown("---")
+st.header("⚖️ Algorithm Performance Comparison")
+st.write("Comparing the accuracy of different Data Mining algorithms from your syllabus (Random Forest, J48/Decision Tree, and Naive Bayes) on our generated dataset.")
+
+# Import the additional algorithms directly here to avoid touching the top of the file
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+
+# 1. Train J48 (Decision Tree equivalent in Scikit-Learn)
+dt_model = DecisionTreeClassifier(random_state=42)
+dt_model.fit(X_train, y_train)
+dt_accuracy = accuracy_score(y_test, dt_model.predict(X_test))
+
+# 2. Train Naive Bayes
+nb_model = GaussianNB()
+nb_model.fit(X_train, y_train)
+nb_accuracy = accuracy_score(y_test, nb_model.predict(X_test))
+
+# 3. Create a comparison dataframe
+comparison_df = pd.DataFrame({
+    'Algorithm': ['Random Forest', 'J48 (Decision Tree)', 'Naive Bayes'],
+    'Accuracy (%)': [accuracy * 100, dt_accuracy * 100, nb_accuracy * 100]
+})
+
+# 4. Display as an interactive bar chart
+st.subheader("📊 Accuracy Chart")
+st.bar_chart(comparison_df.set_index('Algorithm'))
+
+# 5. Show the exact percentage numbers in a clean table
+st.dataframe(comparison_df.style.format({'Accuracy (%)': '{:.2f}%'}), use_container_width=True)
